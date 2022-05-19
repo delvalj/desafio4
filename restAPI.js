@@ -78,6 +78,19 @@ class Contenedor {
       console.log(error);
     }
   }
+
+  async deleteById(id) {
+    try {
+      const contenidoCrudo = JSON.parse(
+        await fs.promises.readFile(this.nombreArchivo)
+      );
+      let prodId = contenidoCrudo.filter((p) => p.id !== id);
+      await fs.promises.writeFile("productos.txt", JSON.stringify(prodId));
+      return prodId;
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
 
 const ejecutarProductos = async () => {
@@ -142,6 +155,16 @@ router.post("/productos", productoSubido, async (req, res, next) => {
   };
   subirProduct();
 });
+
+router.delete("/productos/:id", (req, res) => {
+  let id = parseInt(req.params.id);
+  const eliminoPorID = async () => {
+    const productos = new Contenedor("productos.txt");
+    const mostrarID = await productos.deleteById(id);
+    res.send(`elemento con el ${id} eliminado`);
+  };
+  eliminoPorID();
+})
 
 app.listen(PORT, () => {
   console.log(`Servidor Corriendo en el puerto ${PORT}`);
