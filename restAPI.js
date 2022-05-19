@@ -126,7 +126,6 @@ const productoSubido = storage.fields([
 router.post("/productos", productoSubido, async (req, res, next) => {
   const subirProduct = async () => {
     let produc = new Contenedor("productos.txt");
-    let prod = await produc.metodoSave(req.body);
     if (
       req.body.title === "" ||
       req.body.price === "" ||
@@ -136,6 +135,7 @@ router.post("/productos", productoSubido, async (req, res, next) => {
         error: "No se pudo cargar el producto. Complete los campos vacios.",
       });
     } else {
+      await produc.metodoSave(req.body);
       res.send(req.body);
     }
     next();
