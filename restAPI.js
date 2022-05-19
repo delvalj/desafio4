@@ -7,6 +7,7 @@ const { Router } = express;
 const router = Router();
 const multer = require("multer");
 const storage = multer({ destinantion: "/upload" });
+const PORT = 8081;
 
 // Check if the file exists
 let fileExists = fs.existsSync("productos.txt");
@@ -94,6 +95,9 @@ app.use(express.json());
 // Hace lo mismo pero con dato de formularios. Un form en HTML viene en forma de URL encoded y esto lo trasnforma en formulario.
 app.use(express.urlencoded({ extended: true }));
 
+// Va a buscar en la carpeta PUBLIC si existe el archivo buscado.
+app.use(express.static("public"));
+
 app.use("/api", router);
 
 router.get("/productos", (req, res, next) => {
@@ -139,6 +143,6 @@ router.post("/productos", productoSubido, async (req, res, next) => {
   subirProduct();
 });
 
-app.listen(8080, () => {
-  console.log("Servidor Corriendo en el puerto");
+app.listen(PORT, () => {
+  console.log(`Servidor Corriendo en el puerto ${PORT}`);
 });
